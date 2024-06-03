@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+
+  rss.mock:
+      image: golang:1.21.4-alpine3.18
+      expose:
+        - 80
+      volumes:
+        - ./test/rss.mock/source:/app/source
+        - ./test/rss.mock/config.dev/www:/app/config/www
+        - ./test/client/volume.dev/cache:/root/.cache
+      healthcheck:
+        test: wget --no-verbose --tries=1 --spider http://localhost:80/healthcheck.txt || exit 1
+        interval: 5s
+        timeout: 10s
+        retries: 5
+      working_dir: /app/source
+      command: go run main.go /app/config/www
+      
+  client:
+      image: golang:1.21.4-alpine3.18
+      volumes:
+        - ./test/client/config.dev:/app/config:ro
+        - ./test/client/source:/app/source
+        - ./test/client/volume.dev/cache:/root/.cache
+      depends_on:
+            backend:
+              condition: service_healthy
+            rss.mock:
+              condition: service_healthy
+      working_dir: /app/source
+      command: go run main.go /app/config/config.json

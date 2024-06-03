@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+
+  frontend:
+    image: node:16.20.2-alpine3.18
+    volumes: 
+      - ./app/frontend/source:/app/source
+      - ./app/frontend/volume.prod:/app/volume
+    working_dir: /app/source
+    command: sh -c "npm install && npm run build"
+
+  postgres:
+    image: postgres:16.2-alpine3.19
+    expose:
+      - 5432
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=sf
+    volumes:
+      - ./app/database/source:/docker-entrypoint-initdb.d:ro
+      - ./app/database/volume.prod/data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "user", "-d", "sf"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+
+  backend:
+    build: 
+      context: ./app/backend/source
+      dockerfile: Dockerfile.prod
+    volumes:
+      - ./app/backend/config.prod:/app/config:ro
+      - ./app/frontend/volume.prod/target:/app/www:ro
+    ports:
+      - 8081:80
+    depends_on:
+          postgres:
+            condition: service_healthy
+          frontend:
+            condition: service_completed_successfully
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:80/ || exit 1
+      interval: 5s
+      timeout: 10s
+      retries: 5
+    command: /app/config/config.json /app/www postgres://user:password@postgres:5432/sf

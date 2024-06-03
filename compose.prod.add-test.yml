@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+
+  client:
+      build: 
+        context: ./test/client/source
+        dockerfile: Dockerfile.prod
+      volumes:
+        - ./test/client/config.prod:/app/config:ro
+      depends_on:
+            backend:
+              condition: service_healthy
+      command: /app/config/config.json

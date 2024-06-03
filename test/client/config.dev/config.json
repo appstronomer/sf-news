@@ -1,0 +1,33 @@
+{
+    "is_exact_check": true,
+    "url": "http://backend/news/4",
+    "posts_want": [
+        {
+            "ID": 0, 
+            "PubTime": 1717068660, 
+            "Link": "https://fake-site.com/first-source/2?utm_medium=rss", 
+            "Title": "First source article 2", 
+            "Content": "First source article 2 first paragraph\r\n\r\nFirst source article 2 second paragraph"
+        },
+        {
+            "ID":0, 
+            "PubTime": 1714435200, 
+            "Link": "https://fake-site.com/second-source/2?utm_medium=rss", 
+            "Title": "Second source article 2", 
+            "Content": "Second source article 2 first paragraph\r\n\r\nSecond source article 2 second paragraph"}, 
+        {
+            "ID": 0, 
+            "PubTime": 1714348800, 
+            "Link": "https://fake-site.com/second-source/1?utm_medium=rss", 
+            "Title": "Second source article 1", 
+            "Content": "Second source article 1 first paragraph\r\n\r\nSecond source article 1 second paragraph"
+        },
+        {
+            "ID": 0, 
+            "PubTime": 1711366260, 
+            "Link": "https://fake-site.com/first-source/1?utm_medium=rss", 
+            "Title": "First source article 1", 
+            "Content": "First source article 1 first paragraph\r\n\r\nFirst source article 1 second paragraph"
+        }
+    ]
+}
